@@ -1,9 +1,9 @@
-import mongoose, { Schema, Document} from "mongoose";
+import mongoose, {Schema, Document} from "mongoose";
 
 export interface IPaciente extends Document {
     nombre: string;
     apellido: string;
-    dni: string;
+    dni: number;
     fechaNacimiento: Date;
     edad: number;
     email: string;
@@ -20,7 +20,7 @@ const PacienteSchema: Schema = new Schema({
         required: [true, "El apellido es obligatorio"]
     },
     dni: {
-        type: String,
+        type: Number,
         required: [true, "El DNI es obligatorio"],
         unique: true
     },

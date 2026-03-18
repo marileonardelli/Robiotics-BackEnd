@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db' //Importa conexión
 
 import pacienteRoutes from './routes/paciente.routes';
+import medicoRoutes from './routes/medico.routes';
 
 //Inicializar vairables de entorno
 dotenv.config();
@@ -21,8 +22,9 @@ app.get('/api/ping', (req: Request, res: Response) => {
     res.json({mensaje: 'API funcionando correctamente'});
 });
 
-//Cualquier petición que empiece con /api/pacientes manejada por pacienteRoutes
+//Cualquier petición que empiece con /api/... manejada por ...Routes
 app.use('/api/pacientes', pacienteRoutes);
+app.use('/api/medicos', medicoRoutes);
 
 //Iniciar el servidor
 const PORT = process.env.PORT || 5000;

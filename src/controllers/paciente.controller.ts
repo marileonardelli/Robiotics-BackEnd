@@ -34,15 +34,15 @@ export const crearPaciente = async (req: Request, res: Response): Promise<void> 
 
         //Responder con el paciente creado
         res.status(201).json({
-            mensaje: "Paciente creado",
+            mensaje: "Paciente creado exitosamente",
             paciente: nuevoPaciente
         });
-}
-    catch (error: any) {
-        console.error("Error al crear paciente: ", error);
+    }
+    
+    catch (error) {
         res.status(500).json({ 
-            mensaje: "Error interno en servidor", 
-            error: error.message 
+            mensaje: "Error al crear paciente", 
+            error
         });
     }
 };
