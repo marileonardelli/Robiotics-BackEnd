@@ -3,7 +3,7 @@ import mongoose, {Schema, Document} from "mongoose";
 export interface IMedico extends Document {
     nombre: string;
     apellido: string;
-    matricula: number;
+    matricula: string;
     especialidad: string;
     email: string;
     activo: boolean;
@@ -19,7 +19,7 @@ const MedicoSchema: Schema = new Schema({
         required: [true, "El apellido es obligatorio"]
     },
     matricula: {
-        type: Number,
+        type: String,
         required: [true, "La matrícula es obligatoria"],
         unique: true
     },

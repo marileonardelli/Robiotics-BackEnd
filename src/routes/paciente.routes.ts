@@ -1,10 +1,18 @@
 import { Router } from 'express';
-import { crearPaciente } from '../controllers/paciente.controller';
+import { 
+    crearPaciente,
+    obtenerPacientes,
+    obtenerPacientePorDni,
+    actualizarPaciente,
+    eliminarPaciente
+} from '../controllers/paciente.controller';
 
 const router = Router();
 
-//Cuando llega petición POST a la raiz de esta ruta
-//se ejecuta función "crearPaciente"
 router.post('/', crearPaciente);
+router.get('/', obtenerPacientes);
+router.get('/dni/:dni', obtenerPacientePorDni);
+router.put('/dni/:dni', actualizarPaciente);
+router.delete('/dni/:dni', eliminarPaciente);
 
 export default router;

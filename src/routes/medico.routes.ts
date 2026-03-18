@@ -1,10 +1,18 @@
 import { Router } from 'express';
-import { crearMedico } from '../controllers/medico.controller';
+import { 
+    crearMedico,
+    obtenerMedicos,
+    obtenerMedicoPorMatricula,
+    actualizarMedico,
+    eliminarMedico
+} from '../controllers/medico.controller';
 
 const router = Router();
 
-//Cuando llega petición POST a la raiz de esta ruta
-//se ejecuta función "crearMedico"
 router.post('/', crearMedico);
+router.get('/', obtenerMedicos);
+router.get('/matricula/:matricula', obtenerMedicoPorMatricula);
+router.put('/matricula/:matricula', actualizarMedico);
+router.delete('/matricula/:matricula', eliminarMedico); 
 
 export default router;
