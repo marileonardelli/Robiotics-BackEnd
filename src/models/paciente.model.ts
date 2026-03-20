@@ -1,4 +1,4 @@
-import mongoose, {Schema, Document} from "mongoose";
+import mongoose, {Schema, Document} from 'mongoose';
 
 export interface IPaciente extends Document {
     nombre: string;
@@ -13,24 +13,24 @@ export interface IPaciente extends Document {
 const PacienteSchema: Schema = new Schema({
     nombre: {
         type: String,
-        required: [true, "El nombre es obligatorio"]
+        required: [true, 'El nombre es obligatorio']
     },
     apellido: {
         type: String,
-        required: [true, "El apellido es obligatorio"]
+        required: [true, 'El apellido es obligatorio']
     },
     dni: {
         type: String,
-        required: [true, "El DNI es obligatorio"],
+        required: [true, 'El DNI es obligatorio'],
         unique: true
     },
     fechaNacimiento: {
         type: Date,
-        required: [true, "La fecha de nacimiento es obligatoria"]
+        required: [true, 'La fecha de nacimiento es obligatoria']
     },
     email: {
         type: String,
-        required: [true, "El email es obligatorio"],
+        required: [true, 'El email es obligatorio'],
         unique: true
     },
     activo: {

@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import Medico from "../models/medico.model";
+import { Request, Response } from 'express';
+import Medico from '../models/medico.model';
 
 //Exportar función para usarla en rutas
 export const crearMedico = async (req: Request, res: Response): Promise<void> => {
@@ -8,7 +8,7 @@ export const crearMedico = async (req: Request, res: Response): Promise<void> =>
         //Validar campos obligatorios
         if (!nombre || !apellido || !matricula || !especialidad || !email) {
             res.status(400).json({ 
-                mensaje: "Todos los campos son obligatorios" });
+                mensaje: 'Todos los campos son obligatorios' });
             return;
         }
 
@@ -16,7 +16,7 @@ export const crearMedico = async (req: Request, res: Response): Promise<void> =>
         const medicoExistente = await Medico.findOne({ $or: [{ matricula }, { email }] });
         if (medicoExistente) {
             res.status(400).json({ 
-                mensaje: "Ya existe un médico con esa matrícula o email" });
+                mensaje: 'Ya existe un médico con esa matrícula o email' });
             return;
         }
 
@@ -34,14 +34,14 @@ export const crearMedico = async (req: Request, res: Response): Promise<void> =>
 
         //Responder con el médico creado
         res.status(201).json({ 
-            mensaje: "Médico creado exitosamente",
+            mensaje: 'Médico creado exitosamente',
             medico: nuevoMedico
         });
     } 
     
     catch (error) {
         res.status(500).json({ 
-            mensaje: "Error al crear el médico",
+            mensaje: 'Error al crear el médico',
             error
         });
 
@@ -56,7 +56,7 @@ export const obtenerMedicos = async (req: Request, res: Response): Promise<void>
     }
     catch (error) {
         res.status(500).json({
-            mensaje: "Error al obtener médicos",
+            mensaje: 'Error al obtener médicos',
             error
         });
     }
@@ -69,14 +69,14 @@ export const obtenerMedicoPorMatricula = async (req: Request, res: Response): Pr
         const medico = await Medico.findOne({ matricula: matricula, activo: true});
         
         if (!medico) {
-            res.status(404).json({ mensaje: "Médico no encontrado" });
+            res.status(404).json({ mensaje: 'Médico no encontrado' });
             return;
         }
         res.status(200).json(medico);
     }
     catch (error) {
         res.status(500).json({
-            mensaje: "Error al buscar médico",
+            mensaje: 'Error al buscar médico',
             error
         });
     }
@@ -90,17 +90,17 @@ export const actualizarMedico = async (req: Request, res: Response): Promise<voi
         const medicoActualizado = await Medico.findOneAndUpdate({ matricula: matricula }, datosActualizar, { new: true });
 
         if (!medicoActualizado) {
-            res.status(404).json({ mensaje: "Médico no encontrado" });
+            res.status(404).json({ mensaje: 'Médico no encontrado' });
             return;
         }
         res.status(200).json({
-            mensaje: "Médico actualizado exitosamente",
+            mensaje: 'Médico actualizado exitosamente',
             medico: medicoActualizado
         });
     }
     catch (error) {
         res.status(500).json({
-            mensaje: "Error al actualizar médico",
+            mensaje: 'Error al actualizar médico',
             error
         });
     }
@@ -113,17 +113,17 @@ export const eliminarMedico = async (req: Request, res: Response): Promise<void>
         const medicoEliminado = await Medico.findOneAndUpdate({ matricula: matricula }, { activo: false }, { new: true });
 
         if (!medicoEliminado) {
-            res.status(404).json({ mensaje: "Médico no encontrado" });
+            res.status(404).json({ mensaje: 'Médico no encontrado' });
             return;
         }
         res.status(200).json({
-            mensaje: "Médico eliminado exitosamente",
+            mensaje: 'Médico eliminado exitosamente',
             medico: medicoEliminado
         });
     }
     catch (error) {
         res.status(500).json({
-            mensaje: "Error al eliminar médico",
+            mensaje: 'Error al eliminar médico',
             error
         });
     }

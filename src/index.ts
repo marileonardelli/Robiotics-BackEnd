@@ -5,6 +5,7 @@ import { connectDB } from './config/db' //Importa conexión
 
 import pacienteRoutes from './routes/paciente.routes';
 import medicoRoutes from './routes/medico.routes';
+import turnoRoutes from './routes/turno.routes';
 
 //Inicializar vairables de entorno
 dotenv.config();
@@ -25,6 +26,7 @@ app.get('/api/ping', (req: Request, res: Response) => {
 //Cualquier petición que empiece con /api/... manejada por ...Routes
 app.use('/api/pacientes', pacienteRoutes);
 app.use('/api/medicos', medicoRoutes);
+app.use('/api/turnos', turnoRoutes);
 
 //Iniciar el servidor
 const PORT = process.env.PORT || 5000;
