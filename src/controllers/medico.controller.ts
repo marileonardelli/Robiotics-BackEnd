@@ -48,10 +48,16 @@ export const crearMedico = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-//LEER TODOS LOS MEDICOS (los activos)
+//LEER TODOS LOS MEDICOS (los activos) con filtro por especialidad
 export const obtenerMedicos = async (req: Request, res: Response): Promise<void> => {
     try {
-        const medicos = await Medico.find({activo: true});
+        const { especialidad } = req.query;
+        const filtro: any = { activo: true };
+        if (especialidad) {
+            filtro.especialidad = especialidad;
+        }
+
+        const medicos = await Medico.find({filtro});
         res.status(200).json(medicos);
     }
     catch (error) {
