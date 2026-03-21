@@ -77,6 +77,54 @@ export const obtenerTurnos = async (req: Request, res: Response): Promise<void> 
     }
 };
 
+//Ver turnos pendientes de paciente
+export const obtenerTurnosPaciente = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { dni } = req.params;
+        const paciente = await Paciente.findOne({ dni: dni, activo: true });
+        if (!paciente) {
+            res.status(404).json({ 
+                mensaje: 'Paciente no encontrado' });
+            return;
+        }
+
+        const turnos = await Turno.find({ paciente: paciente._id, estado: 'Pendiente' })
+            .populate('medico', 'nombre apellido matricula especialidad');
+        res.status(200).json({ turnos });
+    }
+    
+    catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error al obtener turnos del paciente',
+            error: error
+        });
+    }
+};
+
+//Ver turnos asignados de médico
+export const obtenerTurnosMedico = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { matricula } = req.params;
+        const medico = await Medico.findOne({ matricula: matricula, activo: true });
+        if (!medico) {
+            res.status(404).json({ 
+                mensaje: 'Médico no encontrado' });
+            return;
+        }
+
+        const turnos = await Turno.find({ medico: medico._id, estado: 'Pendiente' })
+            .populate('paciente', 'nombre apellido dni');
+        res.status(200).json({ turnos });
+    }
+    
+    catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error al obtener turnos del médico',
+            error: error
+        });
+    }
+};
+
 //Cancelar turno
 export const cancelarTurno = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -89,10 +137,67 @@ export const cancelarTurno = async (req: Request, res: Response): Promise<void> 
             turno: turnoCancelado
         });
     } 
-    
+
     catch (error) {
         res.status(500).json({ 
             mensaje: 'Error al cancelar turno',
+            error: error
+        });
+    }
+};
+
+//Completar turno y agregar notas
+export const atenderPaciente = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { notasMedico } = req.body;
+
+        if (!notasMedico) {
+            res.status(400).json({ 
+                mensaje: 'Las notas del médico son obligatorias para completar el turno' });
+            return;
+        }
+        
+        //Validaciones
+        const turnoActual = await Turno.findById(id);
+        if (!turnoActual) {
+            res.status(404).json({ 
+                mensaje: 'Turno no encontrado' });
+            return;
+        }
+
+        if (turnoActual.estado === 'Cancelado') {
+            res.status(400).json({ 
+                mensaje: 'No se puede completar un turno cancelado' });
+            return;
+        }
+
+        if (turnoActual.estado === 'Completado') {
+            res.status(400).json({ 
+                mensaje: 'El turno ya fue completado anteriormente' });
+            return;
+        }
+
+        //Actualizar estado a Completado y agregar notas
+        const turnoCompletado = await Turno.findByIdAndUpdate(
+            id, {
+                estado: 'Completado',
+                notasMedico: notasMedico
+            }, 
+            { new: true }
+        )
+        .populate('paciente', 'nombre apellido dni')
+        .populate('medico', 'nombre apellido matricula especialidad');
+        
+        res.status(200).json({ 
+            mensaje: 'Turno completado exitosamente',
+            turno: turnoCompletado
+        });
+    }
+
+    catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error al completar turno',
             error: error
         });
     }
