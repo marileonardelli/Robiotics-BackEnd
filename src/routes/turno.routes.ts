@@ -5,7 +5,8 @@ import {
     obtenerTurnosPaciente,
     obtenerTurnosMedico,
     cancelarTurno,
-    atenderPaciente
+    atenderPaciente,
+    confirmarTurno
 } from '../controllers/turno.controller';
 
 const router = Router();
@@ -16,5 +17,6 @@ router.get('/paciente/:dni', obtenerTurnosPaciente);
 router.get('/medico/:matricula', obtenerTurnosMedico);
 router.put('/cancelar/:id', cancelarTurno);
 router.put('/atender/:id', atenderPaciente);
+router.put('/confirmar/:id', confirmarTurno);
 
 export default router;

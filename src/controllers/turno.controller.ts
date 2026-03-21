@@ -31,6 +31,19 @@ export const crearTurno = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
+        //Validar que no haya otro turno para el mismo médico a la misma hora
+        const turnoExistente = await Turno.findOne({
+            medico: medicoEncontrado._id,
+            fechaHora: fechaHora,
+            estado: { $in: ['Pendiente', 'Confirmado'] }
+        });
+
+        if (turnoExistente) {
+            res.status(400).json({ 
+                mensaje: 'Horario no disponible. El médico ya tiene paciente asignado para esa fecha y hora' });
+            return;
+        }
+
         //Armar turno con id internos
         const nuevoTurno = new Turno({
             paciente: pacienteEncontrado._id,
@@ -198,6 +211,47 @@ export const atenderPaciente = async (req: Request, res: Response): Promise<void
     catch (error) {
         res.status(500).json({ 
             mensaje: 'Error al completar turno',
+            error: error
+        });
+    }
+};
+
+//Confirmar asistencia a turno
+export const confirmarTurno = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params; //ID del turno a confirmar
+
+        const turnoActual = await Turno.findById(id);
+
+        if (!turnoActual) {
+            res.status(404).json({ 
+                mensaje: 'Turno no encontrado' });
+            return;
+        }
+
+        if (turnoActual.estado !== 'Pendiente') {
+            res.status(400).json({ 
+                mensaje: 'Solo se pueden confirmar turnos en estado Pendiente' });
+            return;
+        }
+
+        const turnoConfirmado = await Turno.findByIdAndUpdate(
+            id, 
+            { estado: 'Confirmado' },
+            { new: true }
+        )
+        .populate('paciente', 'nombre apellido dni')
+        .populate('medico', 'nombre apellido matricula especialidad');
+
+        res.status(200).json({ 
+            mensaje: 'Turno confirmado exitosamente',
+            turno: turnoConfirmado
+        });
+    }
+
+    catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error al confirmar turno',
             error: error
         });
     }

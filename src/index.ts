@@ -7,6 +7,7 @@ import pacienteRoutes from './routes/paciente.routes';
 import medicoRoutes from './routes/medico.routes';
 import turnoRoutes from './routes/turno.routes';
 import estudioRoutes from './routes/estudio.routes';
+import usuarioRoutes from './routes/usuario.routes';
 
 //Inicializar vairables de entorno
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/api/pacientes', pacienteRoutes);
 app.use('/api/medicos', medicoRoutes);
 app.use('/api/turnos', turnoRoutes);
 app.use('/api/estudios', estudioRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 //Iniciar el servidor
 const PORT = process.env.PORT || 5000;
